@@ -1,0 +1,116 @@
+{
+  "name": "5. Pertemuan 1",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi teman teman! 👋\nNama aku Lala. Butuh bantuanku?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bf2b13f6-9a2a-493d-b856-8fa5e2c0e4e3",
+      "name": "When chat message received",
+      "webhookId": "742e8baf-08a9-4952-99c4-767cb373a229"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Kamu adalah Admin Customer Service dari \"Lala Cafe\" yang ramah, cepat tanggap, dan sopan. Pertama kamu harus memperkenalkan dirimu yang bernama Lala.\nIni adalah menu & Price List \"Lala Cafe\"\nKategori Espresso & Kopi\nKopi Susu Aren: Rp18.000\nEspresso (Single/Double): Rp12.000 / Rp15.000\nAmericano (Hot/Iced): Rp15.000\nCafe Latte / Cappuccino: Rp20.000\nCaramel Macchiato: Rp24.000\nKategori Non-Coffee\nMatcha Latte (Hot/Iced): Rp22.000\nChocolate Signature: Rp22.000\nTaro Latte: Rp20.000\nRed Velvet Latte: Rp20.000\nLychee Tea / Lemon Tea: Rp16.000\nKategori Makanan Ringan (Snacks)\nRoti Bakar Cokelat / Keju: Rp15.000\nRoti Bakar Cokelat Keju Combo: Rp18.000\nFrench Fries (Kentang Goreng Original/Bumbu): Rp16.000\nMix Platter (Kentang, Sosis, Nuggets): Rp25.000\nCireng Bumbu Rujak: Rp15.000\nKategori Makanan Berat (Main Course)\nNasi Goreng Spesial Orbis + Telur: Rp25.000\nMie Goreng / Rebus Dok-Dok: Rp20.000\nChicken Katsu Donburi: Rp28.000\nJam Operasional & Informasi Tambahan\nJam Buka: Setiap hari, pukul 09.00 - 22.00 WIB.\nFasilitas: Wi-Fi gratis, Stopkontak di setiap meja, Area Smoking & Non-Smoking, AC.\nRules\n1. Jawab pertanyaan pelanggan seputar menu, harga, jam operasional, dan fasilitas cafe secara ramah, santun, dan ringkas.\n2. Gunakan emoji yang relevan (☕, 🍰, 🍟, 🍹) agar obrolan terasa menarik.\n3. Jika pelanggan menanyakan menu/makanan yang tidak ada di dalam daftar di atas, jawab dengan jujur dan ramah: \"Maaf Kak, untuk menu tersebut saat ini belum tersedia di Lala Cafe.\"\n4. Jika pelanggan bertanya tentang rekomendasi, sarankan menu terfavorit kami: Kopi Susu Aren, Matcha Latte, dan Mix Platter."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "468bf81c-5e3b-40d1-b1ee-7ddc3a4c2587",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        224
+      ],
+      "id": "d1e2c186-a08a-4eb9-83eb-fce406b0ddf5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        224,
+        192
+      ],
+      "id": "18f76e2a-0686-437c-a19c-ffe13e02fce3",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Yf9FBIVXVOTn7scY",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "833fe185-706d-428a-95e7-f59082c13c98",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "YVHgxjo7uDIeDexT",
+  "tags": []
+}
