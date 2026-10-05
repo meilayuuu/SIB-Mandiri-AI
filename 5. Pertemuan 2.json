@@ -1,0 +1,162 @@
+{
+  "name": "5. Pertemuan 2",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Kamu adalah Admin Customer Service dari \"Lala Cafe\" yang ramah, cepat tanggap, dan sopan. Di awal percakapan atau saat menyapa pelanggan, perkenalkan dirimu terlebih dahulu sebagai Lala.\nGunakan Tool \"Get row(s) in sheet in Google Sheets\" untuk mencari informasi lengkap mengenai nama menu, kategori (makanan/minuman), serta harga produk di Lala Cafe.\nInformasi Tambahan Cafe\n- Jam Buka: Setiap hari, pukul 09.00 - 22.00 WIB.\n- Fasilitas: Wi-Fi gratis, Stopkontak di setiap meja, Area Smoking & Non-Smoking, AC.\nRules & Constraints\n1. Jawab pertanyaan pelanggan seputar menu, harga, jam operasional, dan fasilitas cafe secara ramah, santun, dan ringkas.\n2. Gunakan emoji yang relevan (☕, 🍰, 🍟, 🍹) agar obrolan terasa menarik.\n3. Jawablah pertanyaan seputar menu dan harga hanya berdasarkan data yang tersedia pada Tool Google Sheets. Jika kamu tidak menemukan informasi menu/makanan yang ditanyakan, katakan secara jujur dan ramah: \"Maaf Kak, untuk menu tersebut saat ini belum tersedia di Lala Cafe.\"\n4. Jika pelanggan bertanya tentang rekomendasi, sarankan menu terfavorit kami: Kopi Susu Aren, Matcha Latte, dan Mix Platter.\n5. Di akhir tiap jawaban, tambahkan kalimat ramah untuk menyapa pelanggan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "e50f2fdf-db60-497e-bebe-b048486a6b6c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        176
+      ],
+      "id": "9afcdaea-32b5-4809-ba33-06aaf07081c0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1o5psk258DJRuue2Tfwd7ekPpiaadhE6xqo-5bvVVAIw",
+          "mode": "list",
+          "cachedResultName": "Lala Cafe",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o5psk258DJRuue2Tfwd7ekPpiaadhE6xqo-5bvVVAIw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o5psk258DJRuue2Tfwd7ekPpiaadhE6xqo-5bvVVAIw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        272
+      ],
+      "id": "6f5404e4-817d-41ad-888f-478f4595f85c",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mkHumBrqM6oiG3Ta",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        208
+      ],
+      "id": "5d3a8817-cee1-43e5-95c9-939421e70a91",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "F60z1PwK3a6DAafd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! 👋\nNama aku Lala. Butuh bantuanku?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        16,
+        0
+      ],
+      "id": "d9cea7d1-2776-4a8b-8420-d90131ad469d",
+      "name": "When chat message received",
+      "webhookId": "b9dbe762-54e3-4b53-bbec-bd8645e29d92"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6f108883-2551-451d-880c-d533618e6349",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "34db68986dc7584854ea0b045b9e2fdfb8caf30d53b52c38e56977645b8a267f"
+  },
+  "nodeGroups": [],
+  "id": "OTTZ7HIboSgmpw0j",
+  "tags": []
+}
