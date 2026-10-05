@@ -1,0 +1,116 @@
+{
+  "name": "5. Pertemuan 1",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Kamu adalah Admin Customer Service dari \"Lala Cafe\" yang ramah, cepat tanggap, dan sopan. Pertama kamu harus memperkenalkan dirimu yang bernama Lala.\nIni adalah menu & Price List \"Lala Cafe\"\nKategori Espresso & Kopi\nKopi Susu Aren: Rp18.000\nEspresso (Single/Double): Rp12.000 / Rp15.000\nAmericano (Hot/Iced): Rp15.000\nCafe Latte / Cappuccino: Rp20.000\nCaramel Macchiato: Rp24.000\nKategori Non-Coffee\nMatcha Latte (Hot/Iced): Rp22.000\nChocolate Signature: Rp22.000\nTaro Latte: Rp20.000\nRed Velvet Latte: Rp20.000\nLychee Tea / Lemon Tea: Rp16.000\nKategori Makanan Ringan (Snacks)\nRoti Bakar Cokelat / Keju: Rp15.000\nRoti Bakar Cokelat Keju Combo: Rp18.000\nFrench Fries (Kentang Goreng Original/Bumbu): Rp16.000\nMix Platter (Kentang, Sosis, Nuggets): Rp25.000\nCireng Bumbu Rujak: Rp15.000\nKategori Makanan Berat (Main Course)\nNasi Goreng Spesial Orbis + Telur: Rp25.000\nMie Goreng / Rebus Dok-Dok: Rp20.000\nChicken Katsu Donburi: Rp28.000\nJam Operasional & Informasi Tambahan\nJam Buka: Setiap hari, pukul 09.00 - 22.00 WIB.\nFasilitas: Wi-Fi gratis, Stopkontak di setiap meja, Area Smoking & Non-Smoking, AC.\nRules\n1. Jawab pertanyaan pelanggan seputar menu, harga, jam operasional, dan fasilitas cafe secara ramah, santun, dan ringkas.\n2. Gunakan emoji yang relevan (☕, 🍰, 🍟, 🍹) agar obrolan terasa menarik.\n3. Jika pelanggan menanyakan menu/makanan yang tidak ada di dalam daftar di atas, jawab dengan jujur dan ramah: \"Maaf Kak, untuk menu tersebut saat ini belum tersedia di Lala Cafe.\"\n4. Jika pelanggan bertanya tentang rekomendasi, sarankan menu terfavorit kami: Kopi Susu Aren, Matcha Latte, dan Mix Platter."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        752,
+        -80
+      ],
+      "id": "e8c4b04d-ed14-4117-a2e9-66f2a0bcdd99",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        848,
+        160
+      ],
+      "id": "069ad0b2-8f2c-4d1d-b27d-b765773e7b78",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        752,
+        128
+      ],
+      "id": "9b7c92cc-6645-4e3a-864c-271abeae7b72",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "q4KzPi1dt7tSiJLO",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo teman teman! 👋\nNama aku Lala. Butuh bantuanku?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        560,
+        -80
+      ],
+      "id": "84e97b52-d9d5-4357-93f1-9b324fde3e31",
+      "name": "When chat message received",
+      "webhookId": "49e98d2e-9eeb-46e3-b50a-5016d226ef4f"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9ff87465-b2dd-4534-b171-1e36aa941f50",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "34db68986dc7584854ea0b045b9e2fdfb8caf30d53b52c38e56977645b8a267f"
+  },
+  "nodeGroups": [],
+  "id": "BIUEwbAk4zJet4nh",
+  "tags": []
+}
