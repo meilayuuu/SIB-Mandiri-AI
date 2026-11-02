@@ -1,0 +1,411 @@
+{
+  "name": "7. Tugas 1 Pertemuan 2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "q": "=shopee OR grab OR idcloudhost",
+          "readStatus": "unread"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "89f68548-b0a1-4934-bd07-6edb0204acd6",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bqqenkwpeoc3i98G",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.snippet }}",
+                    "rightValue": "IDCloudHost",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "ea50e285-7f5d-4463-88ab-af1c01db72c9"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "IDCloudHost"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "614d1354-7bc8-4099-8e5d-f2569882491c",
+                    "leftValue": "={{ $json.snippet }}",
+                    "rightValue": "Grab",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grab"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d7e96b42-57e5-4e17-8c09-cbb14743c6cc",
+                    "leftValue": "={{ $json.snippet }}",
+                    "rightValue": "Shopee",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Shopee"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "1c489d73-9ecb-41d5-826c-152bb9c43001",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a87c153-7b7f-4d9d-b9b7-6162a0154ed1",
+              "name": "Tanggal",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "28cc3500-25fd-4229-94f5-3674d6eef1d7",
+              "name": "Jumlah",
+              "value": "={{ $json.snippet.match(/Total.*?Rp\\s*([\\d\\.]+)/s)?.[1].replace(/\\./g, \"\") }}",
+              "type": "number"
+            },
+            {
+              "id": "8b33e660-ef44-42ad-a5ce-99d4407e9fcf",
+              "name": "Nominal",
+              "value": "=Cloud",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        432,
+        -144
+      ],
+      "id": "7755942b-172f-4e6a-9ff6-08ce5c22ecf3",
+      "name": "IDCloudHost"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a87c153-7b7f-4d9d-b9b7-6162a0154ed1",
+              "name": "Tanggal",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "28cc3500-25fd-4229-94f5-3674d6eef1d7",
+              "name": "=Jumlah",
+              "value": "={{ $json.snippet.match(/Total Tarif.*?([\\d\\.]+)/s)?.[1].replace(/\\./g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "8b33e660-ef44-42ad-a5ce-99d4407e9fcf",
+              "name": "=Nominal",
+              "value": "=Grab",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        432,
+        0
+      ],
+      "id": "c205ca01-ce3c-45da-b6e5-a6f271e583f0",
+      "name": "Grab"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a87c153-7b7f-4d9d-b9b7-6162a0154ed1",
+              "name": "Tanggal",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "28cc3500-25fd-4229-94f5-3674d6eef1d7",
+              "name": "Jumlah",
+              "value": "={{ ($json.snippet.match(/(?:Total Pesanan|Total Pembayaran|Total|Rp)\\s*([\\d\\.]+)/s) || [])[1]?.replace(/\\./g, \"\") || \"0\" }}",
+              "type": "number"
+            },
+            {
+              "id": "8b33e660-ef44-42ad-a5ce-99d4407e9fcf",
+              "name": "Nominal",
+              "value": "=Shopee",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        432,
+        144
+      ],
+      "id": "274bf08e-9827-49f7-b862-c95d586d8030",
+      "name": "Shopee"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        688,
+        -16
+      ],
+      "id": "2a966eab-c0e3-4676-8c04-831a7fb2f034",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1G-qUjJYwTvNEsaClCOG8J_y7cew2c_xDkmsleR71CUA",
+          "mode": "list",
+          "cachedResultName": "Pencatatan Keuangan Dari Email",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G-qUjJYwTvNEsaClCOG8J_y7cew2c_xDkmsleR71CUA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G-qUjJYwTvNEsaClCOG8J_y7cew2c_xDkmsleR71CUA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tanggal": "={{ $json.Tanggal }}",
+            "Jumlah": "={{ $json.Jumlah }}",
+            "Produk": "={{ $json.Nominal }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Tanggal",
+              "displayName": "Tanggal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Jumlah",
+              "displayName": "Jumlah",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Produk",
+              "displayName": "Produk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        0
+      ],
+      "id": "b5a71a28-73b4-4822-8a66-4aa95f454eaf",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "63T3OteBeVlmqYQo",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "IDCloudHost",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Grab",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Shopee",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IDCloudHost": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grab": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Shopee": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "09d9c409-7f1d-4e58-9f1e-f6d1f785541e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "dDB9FurJBEkROx21",
+  "tags": []
+}
